@@ -143,7 +143,7 @@ struct DNAUploadView: View {
         .navigationBarTitleDisplayMode(.inline)
         .fileImporter(
             isPresented: $showingFilePicker,
-            allowedContentTypes: [.text, .zip],
+            allowedContentTypes: [.plainText, .text, .zip],
             allowsMultipleSelection: false
         ) { result in
             handleFileSelection(result)
@@ -181,18 +181,19 @@ struct DNAUploadView: View {
         case .success(let urls):
             guard let url = urls.first else { return }
             
-            // Start accessing security-scoped resource
-            guard url.startAccessingSecurityScopedResource() else {
-                errorMessage = "Unable to access the selected file"
-                showingError = true
-                return
-            }
-            
-            defer { url.stopAccessingSecurityScopedResource() }
-            
-            // Upload DNA data
             Task {
                 do {
+                    // Start accessing security-scoped resource within the async scope
+                    guard url.startAccessingSecurityScopedResource() else {
+                        await MainActor.run {
+                            errorMessage = "Unable to access the selected file"
+                            showingError = true
+                        }
+                        return
+                    }
+                    defer { url.stopAccessingSecurityScopedResource() }
+                    
+                    // Upload DNA data
                     try await appState.uploadDNAData(from: url)
                 } catch {
                     await MainActor.run {
