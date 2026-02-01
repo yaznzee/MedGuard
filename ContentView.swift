@@ -23,13 +23,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Background gradient
-                LinearGradient(
-                    colors: [Color(hex: "667eea"), Color(hex: "764ba2")],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+                AppTheme.background.ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 25) {
@@ -37,15 +31,15 @@ struct ContentView: View {
                         VStack(spacing: 10) {
                             Image(systemName: "heart.text.square.fill")
                                 .font(.system(size: 60))
-                                .foregroundColor(.white)
+                                .foregroundColor(AppTheme.crimson)
                             
                             Text("MedGuard")
-                                .font(.system(size: 42, weight: .bold))
-                                .foregroundColor(.white)
+                                .font(AppFont.display(42))
+                                .foregroundColor(AppTheme.navy)
                             
                             Text("Personalized Drug Safety Analysis")
-                                .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.9))
+                                .font(AppFont.body(15))
+                                .foregroundColor(AppTheme.muted)
                         }
                         .padding(.top, 40)
                         
@@ -56,18 +50,13 @@ struct ContentView: View {
                                 title: "1. Upload DNA Data",
                                 subtitle: "Import your 23andMe report",
                                 icon: "doc.text.fill",
-                                color: Color(hex: "4facfe"),
+                                color: AppTheme.navy,
                                 isComplete: appState.dnaDataUploaded
                             ) {
                                 NavigationLink(destination: DNAUploadView(appState: appState)) {
                                     Text("Upload DNA Report")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color(hex: "4facfe"))
-                                        .cornerRadius(12)
                                 }
+                                .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.navy))
                             }
                             
                             // Step 2: Enter Medications
@@ -75,18 +64,13 @@ struct ContentView: View {
                                 title: "2. Enter Medications",
                                 subtitle: "List drugs you're taking or considering",
                                 icon: "pills.fill",
-                                color: Color(hex: "43e97b"),
+                                color: AppTheme.ink,
                                 isComplete: appState.medicationsEntered
                             ) {
                                 NavigationLink(destination: MedicationInputView(appState: appState)) {
                                     Text("Enter Medications")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color(hex: "43e97b"))
-                                        .cornerRadius(12)
                                 }
+                                .buttonStyle(SecondaryActionButtonStyle(color: AppTheme.ink))
                             }
                             
                             // Step 3: Baseline Vitals
@@ -94,18 +78,13 @@ struct ContentView: View {
                                 title: "3. Record Baseline Vitals",
                                 subtitle: "30-second measurement using camera",
                                 icon: "waveform.path.ecg",
-                                color: Color(hex: "fa709a"),
+                                color: AppTheme.crimson,
                                 isComplete: appState.baselineVitalsRecorded
                             ) {
                                 NavigationLink(destination: VitalsMonitorView(appState: appState, isBaseline: true)) {
                                     Text("Measure Baseline")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color(hex: "fa709a"))
-                                        .cornerRadius(12)
                                 }
+                                .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.crimson))
                             }
                             
                             // Step 4: Get Analysis
@@ -114,18 +93,13 @@ struct ContentView: View {
                                     title: "4. Safety Analysis",
                                     subtitle: "AI-powered interaction report",
                                     icon: "chart.bar.doc.horizontal.fill",
-                                    color: Color(hex: "fee140"),
+                                    color: AppTheme.navy,
                                     isComplete: false
                                 ) {
                                     NavigationLink(destination: AnalysisResultsView(appState: appState)) {
                                         Text("Analyze Interactions")
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(Color(hex: "fa709a"))
-                                            .cornerRadius(12)
                                     }
+                                    .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.navy))
                                 }
                             }
                             
@@ -135,18 +109,13 @@ struct ContentView: View {
                                     title: "5. Monitor Symptoms",
                                     subtitle: "Track vitals after taking medication",
                                     icon: "bell.badge.fill",
-                                    color: Color(hex: "ff6b6b"),
+                                    color: AppTheme.crimson,
                                     isComplete: false
                                 ) {
                                     NavigationLink(destination: VitalsMonitorView(appState: appState, isBaseline: false)) {
                                         Text("Monitor Now")
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                            .frame(maxWidth: .infinity)
-                                            .padding()
-                                            .background(Color(hex: "ff6b6b"))
-                                            .cornerRadius(12)
                                     }
+                                    .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.crimson))
                                 }
                             }
                         }
@@ -156,9 +125,8 @@ struct ContentView: View {
                         if appState.hasAnyData {
                             VStack(spacing: 15) {
                                 Text("Your Profile")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.white)
+                                    .font(AppFont.display(22))
+                                    .foregroundColor(AppTheme.navy)
                                 
                                 HStack(spacing: 15) {
                                     StatCard(
@@ -204,37 +172,47 @@ struct WorkflowCard<Content: View>: View {
     @ViewBuilder let content: Content
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            HStack {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundColor(color)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                Spacer()
-                
-                if isComplete {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                        .font(.title2)
-                }
-            }
+        HStack(spacing: 0) {
+            Rectangle()
+                .fill(color)
+                .frame(width: 4)
             
-            content
+            VStack(alignment: .leading, spacing: 15) {
+                HStack {
+                    Image(systemName: icon)
+                        .font(.title2)
+                        .foregroundColor(color)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(title)
+                            .font(AppFont.body(17, weight: .semibold))
+                            .foregroundColor(AppTheme.ink)
+                        
+                        Text(subtitle)
+                            .font(AppFont.body(13))
+                            .foregroundColor(AppTheme.muted)
+                    }
+                    
+                    Spacer()
+                    
+                    if isComplete {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(AppTheme.success)
+                            .font(.title2)
+                    }
+                }
+                
+                content
+            }
+            .padding(20)
         }
-        .padding(20)
-        .background(Color.white)
+        .background(AppTheme.surface)
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
     }
 }
 
@@ -247,49 +225,23 @@ struct StatCard: View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(.white)
+                .foregroundColor(AppTheme.crimson)
             
             Text(value)
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
+                .font(AppFont.display(22))
+                .foregroundColor(AppTheme.ink)
             
             Text(label)
-                .font(.caption)
-                .foregroundColor(.white.opacity(0.9))
+                .font(AppFont.body(12))
+                .foregroundColor(AppTheme.muted)
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color.white.opacity(0.2))
+        .background(AppTheme.surface)
         .cornerRadius(12)
-    }
-}
-
-// MARK: - Color Extension
-
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (1, 1, 1, 0)
-        }
-
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppTheme.border, lineWidth: 1)
         )
     }
 }

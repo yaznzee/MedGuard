@@ -17,32 +17,30 @@ struct VitalsMonitorView: View {
     var body: some View {
         ZStack {
             // Background
-            LinearGradient(
-                colors: [Color(hex: "667eea"), Color(hex: "764ba2")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
             
             VStack(spacing: 20) {
                 // Header
                 Text(isBaseline ? "Baseline Vitals" : "Follow-up Monitoring")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .font(AppFont.display(32))
+                    .foregroundColor(AppTheme.navy)
                     .padding(.top, 40)
                 
                 Text(isBaseline ? "Record your vitals before taking medication" : "Monitor for changes after medication")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.9))
+                    .font(AppFont.body(15))
+                    .foregroundColor(AppTheme.muted)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
                 
                 // Presage SDK View
                 SmartSpectraView()
                     .frame(maxHeight: 400)
-                    .background(Color.white.opacity(0.1))
+                    .background(AppTheme.surface)
                     .cornerRadius(20)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(AppTheme.border, lineWidth: 1)
+                    )
                     .padding()
                 
                 // Current vitals display
@@ -71,19 +69,23 @@ struct VitalsMonitorView: View {
                         // Status indicator
                         HStack {
                             Image(systemName: processor.statusHint.contains("Hold") ? "exclamationmark.triangle.fill" : "checkmark.circle.fill")
-                                .foregroundColor(processor.statusHint.contains("Hold") ? .yellow : .green)
+                                .foregroundColor(processor.statusHint.contains("Hold") ? AppTheme.warning : AppTheme.success)
                             
                             Text(processor.statusHint)
-                                .font(.caption)
-                                .foregroundColor(.white)
+                                .font(AppFont.body(12))
+                                .foregroundColor(AppTheme.muted)
                         }
                         .padding()
-                        .background(Color.white.opacity(0.2))
+                        .background(AppTheme.surface)
                         .cornerRadius(12)
                     }
                     .padding()
-                    .background(Color.white)
+                    .background(AppTheme.surface)
                     .cornerRadius(16)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(AppTheme.border, lineWidth: 1)
+                    )
                     .padding(.horizontal)
                 }
                 
@@ -97,14 +99,9 @@ struct VitalsMonitorView: View {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
                             Text("Save Vitals")
-                                .fontWeight(.semibold)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
                     }
+                    .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.success))
                     .padding(.horizontal)
                     .alert("Vitals Saved", isPresented: $showingSaveConfirmation) {
                         Button("OK") {
@@ -164,33 +161,37 @@ struct VitalReadout: View {
                 .foregroundColor(color)
             
             Text(label)
-                .font(.caption)
-                .foregroundColor(.secondary)
+                .font(AppFont.body(12))
+                .foregroundColor(AppTheme.muted)
             
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(isValid ? value : "--")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(.primary)
+                    .font(AppFont.display(26))
+                    .foregroundColor(AppTheme.ink)
                 
                 Text(unit)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(AppFont.body(12))
+                    .foregroundColor(AppTheme.muted)
             }
             
             if isValid {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
+                    .foregroundColor(AppTheme.success)
                     .font(.caption)
             } else {
                 Image(systemName: "hourglass")
-                    .foregroundColor(.orange)
+                    .foregroundColor(AppTheme.warning)
                     .font(.caption)
             }
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color.white.opacity(0.9))
+        .background(AppTheme.surface)
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
     }
 }
 

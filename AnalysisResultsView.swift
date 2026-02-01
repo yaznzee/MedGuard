@@ -9,12 +9,7 @@ struct AnalysisResultsView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [Color(hex: "667eea"), Color(hex: "764ba2")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
             
             ScrollView {
                 VStack(spacing: 25) {
@@ -22,21 +17,20 @@ struct AnalysisResultsView: View {
                     VStack(spacing: 15) {
                         Image(systemName: "chart.bar.doc.horizontal.fill")
                             .font(.system(size: 60))
-                            .foregroundColor(.white)
+                            .foregroundColor(AppTheme.navy)
                         
                         Text("Safety Analysis")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .font(AppFont.display(34))
+                            .foregroundColor(AppTheme.navy)
                         
                         if let analysis = appState.currentAnalysis {
                             Text("Completed \(analysis.timestamp.formatted(date: .abbreviated, time: .shortened))")
-                                .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.9))
+                                .font(AppFont.body(14))
+                                .foregroundColor(AppTheme.muted)
                         } else {
                             Text("Analyze your medication safety profile")
-                                .font(.subheadline)
-                                .foregroundColor(.white.opacity(0.9))
+                                .font(AppFont.body(14))
+                                .foregroundColor(AppTheme.muted)
                         }
                     }
                     .padding(.top, 40)
@@ -50,31 +44,41 @@ struct AnalysisResultsView: View {
                         // AI Summary
                         VStack(alignment: .leading, spacing: 15) {
                             Label("Summary", systemImage: "text.bubble.fill")
-                                .font(.headline)
+                                .font(AppFont.body(16, weight: .semibold))
+                                .foregroundColor(AppTheme.ink)
                             
                             Text(analysis.summary)
-                                .font(.body)
+                                .font(AppFont.body(15))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .padding()
-                        .background(Color.white)
+                        .background(AppTheme.surface)
                         .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.1), radius: 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(AppTheme.border, lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(0.05), radius: 8)
                         .padding(.horizontal)
                         
                         // Detailed Report
                         VStack(alignment: .leading, spacing: 15) {
                             Label("Detailed Analysis", systemImage: "doc.text.fill")
-                                .font(.headline)
+                                .font(AppFont.body(16, weight: .semibold))
+                                .foregroundColor(AppTheme.ink)
                             
                             Text(analysis.detailedReport)
-                                .font(.body)
+                                .font(AppFont.body(15))
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .padding()
-                        .background(Color.white)
+                        .background(AppTheme.surface)
                         .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.1), radius: 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(AppTheme.border, lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(0.05), radius: 8)
                         .padding(.horizontal)
                         
                         // Gene-Drug Interactions
@@ -83,7 +87,7 @@ struct AnalysisResultsView: View {
                                 title: "Gene-Drug Interactions",
                                 icon: "dna",
                                 interactions: analysis.geneInteractions,
-                                color: Color(hex: "667eea")
+                                color: AppTheme.navy
                             )
                             .padding(.horizontal)
                         }
@@ -94,7 +98,7 @@ struct AnalysisResultsView: View {
                                 title: "Drug-Drug Interactions",
                                 icon: "pills.circle.fill",
                                 interactions: analysis.drugInteractions,
-                                color: Color(hex: "fa709a")
+                                color: AppTheme.crimson
                             )
                             .padding(.horizontal)
                         }
@@ -102,24 +106,29 @@ struct AnalysisResultsView: View {
                         // Recommendations
                         VStack(alignment: .leading, spacing: 15) {
                             Label("Recommendations", systemImage: "lightbulb.fill")
-                                .font(.headline)
+                                .font(AppFont.body(16, weight: .semibold))
+                                .foregroundColor(AppTheme.ink)
                             
                             ForEach(Array(analysis.recommendations.enumerated()), id: \.offset) { index, recommendation in
                                 HStack(alignment: .top, spacing: 12) {
                                     Text("\(index + 1).")
-                                        .font(.headline)
-                                        .foregroundColor(Color(hex: "667eea"))
+                                        .font(AppFont.body(16, weight: .semibold))
+                                        .foregroundColor(AppTheme.navy)
                                     
                                     Text(recommendation)
-                                        .font(.body)
+                                        .font(AppFont.body(15))
                                         .fixedSize(horizontal: false, vertical: true)
                                 }
                             }
                         }
                         .padding()
-                        .background(Color.white)
+                        .background(AppTheme.surface)
                         .cornerRadius(16)
-                        .shadow(color: Color.black.opacity(0.1), radius: 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(AppTheme.border, lineWidth: 1)
+                        )
+                        .shadow(color: Color.black.opacity(0.05), radius: 8)
                         .padding(.horizontal)
                         
                         // Monitoring recommendation
@@ -132,12 +141,13 @@ struct AnalysisResultsView: View {
                                     
                                     VStack(alignment: .leading, spacing: 5) {
                                         Text("Monitoring Recommended")
-                                            .font(.headline)
+                                            .font(AppFont.body(16, weight: .semibold))
+                                            .foregroundColor(AppTheme.ink)
                                         
                                         if let timeRec = appState.monitoringTimeRecommendation {
                                             Text(timeRec)
-                                                .font(.subheadline)
-                                                .foregroundColor(.secondary)
+                                                .font(AppFont.body(13))
+                                                .foregroundColor(AppTheme.muted)
                                         }
                                     }
                                     
@@ -146,18 +156,17 @@ struct AnalysisResultsView: View {
                                 
                                 NavigationLink(destination: VitalsMonitorView(appState: appState, isBaseline: false)) {
                                     Text("Start Monitoring")
-                                        .font(.headline)
-                                        .foregroundColor(.white)
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.orange)
-                                        .cornerRadius(12)
                                 }
+                                .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.warning))
                             }
                             .padding()
-                            .background(Color.white)
+                            .background(AppTheme.surface)
                             .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.1), radius: 10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(AppTheme.border, lineWidth: 1)
+                            )
+                            .shadow(color: Color.black.opacity(0.05), radius: 8)
                             .padding(.horizontal)
                         }
                         
@@ -166,14 +175,9 @@ struct AnalysisResultsView: View {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")
                                 Text("Share Report with Doctor")
-                                    .fontWeight(.semibold)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.white.opacity(0.2))
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
                         }
+                        .buttonStyle(SecondaryActionButtonStyle(color: AppTheme.navy))
                         .padding(.horizontal)
                         
                     } else {
@@ -181,30 +185,24 @@ struct AnalysisResultsView: View {
                         VStack(spacing: 20) {
                             Image(systemName: "waveform.path.ecg.rectangle.fill")
                                 .font(.system(size: 80))
-                                .foregroundColor(.white.opacity(0.5))
+                                .foregroundColor(AppTheme.border)
                             
                             Text("Ready to Analyze")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
+                                .font(AppFont.display(26))
+                                .foregroundColor(AppTheme.navy)
                             
-                            Text("We'll analyze:\n• Your genetic profile\n• Drug-drug interactions\n• Gene-drug interactions\n• Your baseline vitals")
-                                .font(.body)
-                                .foregroundColor(.white.opacity(0.9))
+                            Text("We'll analyze:\n- Your genetic profile\n- Drug-drug interactions\n- Gene-drug interactions\n- Your baseline vitals")
+                                .font(AppFont.body(15))
+                                .foregroundColor(AppTheme.muted)
                                 .multilineTextAlignment(.center)
                             
                             Button(action: runAnalysis) {
                                 HStack {
                                     Image(systemName: "sparkles")
                                     Text("Run Analysis")
-                                        .fontWeight(.semibold)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.white)
-                                .foregroundColor(Color(hex: "667eea"))
-                                .cornerRadius(12)
                             }
+                            .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.navy))
                             .padding(.horizontal, 40)
                         }
                         .padding(.top, 60)
@@ -229,14 +227,14 @@ struct AnalysisResultsView: View {
                         
                         Text("Analyzing interactions...")
                             .foregroundColor(.white)
-                            .font(.headline)
+                            .font(AppFont.body(16, weight: .semibold))
                         
                         Text("Powered by Gemini AI")
                             .foregroundColor(.white.opacity(0.8))
-                            .font(.caption)
+                            .font(AppFont.body(12))
                     }
                     .padding(40)
-                    .background(Color(hex: "667eea"))
+                    .background(AppTheme.navy)
                     .cornerRadius(20)
                 }
             }
@@ -295,10 +293,10 @@ struct RiskLevelCard: View {
     
     var backgroundColor: Color {
         switch riskLevel {
-        case .safe: return Color.green
-        case .caution: return Color.yellow
-        case .danger: return Color.red
-        case .unknown: return Color.gray
+        case .safe: return AppTheme.success
+        case .caution: return AppTheme.warning
+        case .danger: return AppTheme.danger
+        case .unknown: return AppTheme.muted
         }
     }
     
@@ -318,20 +316,23 @@ struct RiskLevelCard: View {
                 .foregroundColor(backgroundColor)
             
             Text(riskLevel.rawValue.uppercased())
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
+                .font(AppFont.display(22))
+                .foregroundColor(AppTheme.ink)
             
             Text(riskLevel.description)
-                .font(.body)
-                .foregroundColor(.secondary)
+                .font(AppFont.body(15))
+                .foregroundColor(AppTheme.muted)
                 .multilineTextAlignment(.center)
         }
         .padding(30)
         .frame(maxWidth: .infinity)
-        .background(Color.white)
+        .background(AppTheme.surface)
         .cornerRadius(20)
-        .shadow(color: backgroundColor.opacity(0.3), radius: 20, x: 0, y: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
+        .shadow(color: backgroundColor.opacity(0.2), radius: 12, x: 0, y: 8)
     }
 }
 
@@ -344,16 +345,16 @@ struct InteractionSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             Label(title, systemImage: icon)
-                .font(.headline)
+                .font(AppFont.body(16, weight: .semibold))
                 .foregroundColor(color)
             
             ForEach(Array(interactions.enumerated()), id: \.offset) { index, interaction in
                 HStack(alignment: .top, spacing: 12) {
                     Image(systemName: "exclamationmark.circle.fill")
-                        .foregroundColor(.orange)
+                        .foregroundColor(AppTheme.warning)
                     
                     Text(interaction)
-                        .font(.body)
+                        .font(AppFont.body(15))
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
@@ -363,9 +364,13 @@ struct InteractionSection: View {
             }
         }
         .padding()
-        .background(Color.white)
+        .background(AppTheme.surface)
         .cornerRadius(16)
-        .shadow(color: Color.black.opacity(0.1), radius: 10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.05), radius: 8)
     }
 }
 

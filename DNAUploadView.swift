@@ -14,12 +14,7 @@ struct DNAUploadView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [Color(hex: "4facfe"), Color(hex: "00f2fe")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
             
             ScrollView {
                 VStack(spacing: 30) {
@@ -27,16 +22,15 @@ struct DNAUploadView: View {
                     VStack(spacing: 15) {
                         Image(systemName: "doc.text.magnifyingglass")
                             .font(.system(size: 70))
-                            .foregroundColor(.white)
+                            .foregroundColor(AppTheme.navy)
                         
                         Text("DNA Profile")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .font(AppFont.display(34))
+                            .foregroundColor(AppTheme.navy)
                         
                         Text("Upload your 23andMe raw data file to analyze genetic drug interactions")
-                            .font(.subheadline)
-                            .foregroundColor(.white.opacity(0.9))
+                            .font(AppFont.body(15))
+                            .foregroundColor(AppTheme.muted)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
                     }
@@ -47,46 +41,56 @@ struct DNAUploadView: View {
                         VStack(spacing: 15) {
                             HStack {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.green)
+                                    .foregroundColor(AppTheme.success)
                                     .font(.title)
                                 
                                 VStack(alignment: .leading, spacing: 5) {
                                     Text("DNA Data Loaded")
-                                        .font(.headline)
+                                        .font(AppFont.body(16, weight: .semibold))
+                                        .foregroundColor(AppTheme.ink)
                                     
                                     Text("Uploaded: \(dnaProfile.uploadDate.formatted(date: .abbreviated, time: .shortened))")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
+                                        .font(AppFont.body(12))
+                                        .foregroundColor(AppTheme.muted)
                                 }
                                 
                                 Spacer()
                             }
                             .padding()
-                            .background(Color.white)
+                            .background(AppTheme.surface)
                             .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(AppTheme.border, lineWidth: 1)
+                            )
                             
                             // Genetic profile summary
                             VStack(alignment: .leading, spacing: 10) {
                                 Text("Detected Genes:")
-                                    .font(.headline)
+                                    .font(AppFont.body(16, weight: .semibold))
+                                    .foregroundColor(AppTheme.ink)
                                 
                                 ForEach(Array(dnaProfile.cytochromeData.sorted(by: { $0.key < $1.key })), id: \.key) { gene, genotype in
                                     HStack {
                                         Text(gene)
-                                            .font(.system(.body, design: .monospaced))
-                                            .foregroundColor(.blue)
+                                            .font(AppFont.mono(14))
+                                            .foregroundColor(AppTheme.navy)
                                         
                                         Spacer()
                                         
                                         Text(genotype)
-                                            .font(.system(.body, design: .monospaced))
-                                            .foregroundColor(.green)
+                                            .font(AppFont.mono(14))
+                                            .foregroundColor(AppTheme.success)
                                     }
                                 }
                             }
                             .padding()
-                            .background(Color.white.opacity(0.9))
+                            .background(AppTheme.surface)
                             .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(AppTheme.border, lineWidth: 1)
+                            )
                         }
                         .padding(.horizontal)
                     } else {
@@ -123,18 +127,13 @@ struct DNAUploadView: View {
                             HStack {
                                 Image(systemName: appState.dnaProfile == nil ? "arrow.up.doc.fill" : "arrow.triangle.2.circlepath")
                                 Text(appState.dnaProfile == nil ? "Upload DNA File" : "Upload New File")
-                                    .fontWeight(.semibold)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.white)
-                            .foregroundColor(Color(hex: "4facfe"))
-                            .cornerRadius(12)
                         }
+                        .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.navy))
                         
                         Text("Supported formats: .txt, .zip")
-                            .font(.caption)
-                            .foregroundColor(.white.opacity(0.8))
+                            .font(AppFont.body(12))
+                            .foregroundColor(AppTheme.muted)
                     }
                     .padding(.horizontal)
                     .padding(.bottom, 30)
@@ -167,10 +166,10 @@ struct DNAUploadView: View {
                         
                         Text("Processing DNA data...")
                             .foregroundColor(.white)
-                            .font(.headline)
+                            .font(AppFont.body(16, weight: .semibold))
                     }
                     .padding(40)
-                    .background(Color(hex: "4facfe"))
+                    .background(AppTheme.navy)
                     .cornerRadius(20)
                 }
             }
@@ -219,23 +218,27 @@ struct InfoCard: View {
         HStack(alignment: .top, spacing: 15) {
             Image(systemName: icon)
                 .font(.title)
-                .foregroundColor(Color(hex: "4facfe"))
+                .foregroundColor(AppTheme.navy)
             
             VStack(alignment: .leading, spacing: 5) {
                 Text(title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(AppFont.body(16, weight: .semibold))
+                    .foregroundColor(AppTheme.ink)
                 
                 Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(AppFont.body(14))
+                    .foregroundColor(AppTheme.muted)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding()
-        .background(Color.white)
+        .background(AppTheme.surface)
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 3)
     }
 }
 

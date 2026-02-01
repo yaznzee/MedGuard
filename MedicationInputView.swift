@@ -12,28 +12,22 @@ struct MedicationInputView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [Color(hex: "43e97b"), Color(hex: "38f9d7")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AppTheme.background.ignoresSafeArea()
             
             VStack {
                 // Header
                 VStack(spacing: 10) {
                     Image(systemName: "pills.fill")
                         .font(.system(size: 60))
-                        .foregroundColor(.white)
+                        .foregroundColor(AppTheme.navy)
                     
                     Text("Your Medications")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                        .font(AppFont.display(34))
+                        .foregroundColor(AppTheme.navy)
                     
                     Text("Add all medications you're taking or considering")
-                        .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.9))
+                        .font(AppFont.body(15))
+                        .foregroundColor(AppTheme.muted)
                         .multilineTextAlignment(.center)
                 }
                 .padding(.top, 40)
@@ -46,15 +40,15 @@ struct MedicationInputView: View {
                         
                         Image(systemName: "pill.circle")
                             .font(.system(size: 80))
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(AppTheme.border)
                         
                         Text("No medications added yet")
-                            .font(.headline)
-                            .foregroundColor(.white)
+                            .font(AppFont.body(16, weight: .semibold))
+                            .foregroundColor(AppTheme.ink)
                         
                         Text("Tap the + button to add your first medication")
-                            .font(.subheadline)
-                            .foregroundColor(.white.opacity(0.8))
+                            .font(AppFont.body(14))
+                            .foregroundColor(AppTheme.muted)
                             .multilineTextAlignment(.center)
                         
                         Spacer()
@@ -91,14 +85,9 @@ struct MedicationInputView: View {
                     HStack {
                         Image(systemName: "plus.circle.fill")
                         Text("Add Medication")
-                            .fontWeight(.semibold)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.white)
-                    .foregroundColor(Color(hex: "43e97b"))
-                    .cornerRadius(12)
                 }
+                .buttonStyle(PrimaryActionButtonStyle(color: AppTheme.navy))
                 .padding()
             }
         }
@@ -119,26 +108,30 @@ struct MedicationCard: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Image(systemName: "pill.fill")
-                    .foregroundColor(Color(hex: "43e97b"))
+                    .foregroundColor(AppTheme.crimson)
                     .font(.title2)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(medication.name)
-                        .font(.headline)
-                        .foregroundColor(.primary)
+                        .font(AppFont.body(16, weight: .semibold))
+                        .foregroundColor(AppTheme.ink)
                     
-                    Text("\(medication.dosage) • \(medication.frequency)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    Text("\(medication.dosage) - \(medication.frequency)")
+                        .font(AppFont.body(14))
+                        .foregroundColor(AppTheme.muted)
                 }
                 
                 Spacer()
             }
         }
         .padding()
-        .background(Color.white)
+        .background(AppTheme.surface)
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 3)
     }
 }
 
