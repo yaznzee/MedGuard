@@ -408,7 +408,7 @@ class AppState: ObservableObject {
 enum AnalysisError: LocalizedError {
     case insufficientData
     case networkError
-    case invalidResponse
+    case invalidResponse(statusCode: Int, message: String)
     
     var errorDescription: String? {
         switch self {
@@ -416,8 +416,8 @@ enum AnalysisError: LocalizedError {
             return "Please complete all steps before analysis"
         case .networkError:
             return "Network connection failed"
-        case .invalidResponse:
-            return "Invalid response from server"
+        case .invalidResponse(let statusCode, let message):
+            return "Invalid response from server (HTTP \(statusCode)). \(message)"
         }
     }
 }
@@ -689,9 +689,15 @@ class BackendAPIService {
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            throw AnalysisError.invalidResponse
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw AnalysisError.invalidResponse(statusCode: -1, message: "Missing HTTP response")
+        }
+        
+        if httpResponse.statusCode != 200 {
+            let bodyText = String(data: data, encoding: .utf8) ?? "<non-utf8 response>"
+            let trimmed = bodyText.trimmingCharacters(in: .whitespacesAndNewlines)
+            let preview = trimmed.isEmpty ? "Empty response body" : String(trimmed.prefix(300))
+            throw AnalysisError.invalidResponse(statusCode: httpResponse.statusCode, message: preview)
         }
         
         // Parse response

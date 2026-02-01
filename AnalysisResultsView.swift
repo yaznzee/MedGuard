@@ -214,6 +214,16 @@ struct AnalysisResultsView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Analysis Error", isPresented: Binding(
+            get: { appState.errorMessage != nil },
+            set: { isPresented in
+                if !isPresented { appState.errorMessage = nil }
+            }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(appState.errorMessage ?? "Unknown error")
+        }
         .overlay {
             if appState.isLoading {
                 ZStack {

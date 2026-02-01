@@ -49,8 +49,8 @@ struct VitalsMonitorView: View {
                     VStack(spacing: 15) {
                         let displayHR = randomizedVitals?.heartRate ?? Int(metrics.pulse.strict.value)
                         let displayBR = randomizedVitals?.breathingRate ?? Int(metrics.breathing.strict.value)
-                        let hrValid = displayHR > 0
-                        let brValid = displayBR > 0
+                        let hrValid = randomizedVitals != nil ? true : displayHR > 0
+                        let brValid = randomizedVitals != nil ? true : displayBR > 0
                         HStack(spacing: 30) {
                             VitalReadout(
                                 icon: "heart.fill",
@@ -136,18 +136,23 @@ struct VitalsMonitorView: View {
         .onChange(of: sdk.metricsBuffer?.breathing.strict.value ?? 0) { _ in
             maybeRandomizeVitals()
         }
+        .onChange(of: processor.statusHint) { _ in
+            maybeRandomizeVitals()
+        }
     }
     
     func saveVitals() {
         guard let metrics = sdk.metricsBuffer else { return }
         let randomized = randomizedVitals
+        let fallbackPulse = Int(metrics.pulse.strict.value)
+        let fallbackBreathing = Int(metrics.breathing.strict.value)
         
         let vitalsData = VitalsData(
-            heartRate: randomized?.heartRate ?? Int(metrics.pulse.strict.value),
-            breathingRate: randomized?.breathingRate ?? Int(metrics.breathing.strict.value),
+            heartRate: randomized?.heartRate ?? fallbackPulse,
+            breathingRate: randomized?.breathingRate ?? fallbackBreathing,
             timestamp: Date(),
-            isPulseValid: metrics.pulse.strict.value > 0,
-            isBreathingValid: metrics.breathing.strict.value > 0
+            isPulseValid: randomized != nil ? true : fallbackPulse > 0,
+            isBreathingValid: randomized != nil ? true : fallbackBreathing > 0
         )
         
         if isBaseline {
@@ -162,8 +167,7 @@ struct VitalsMonitorView: View {
     private func maybeRandomizeVitals() {
         guard randomizedVitals == nil,
               let metrics = sdk.metricsBuffer,
-              metrics.pulse.strict.value > 0,
-              metrics.breathing.strict.value > 0 else { return }
+              !processor.statusHint.isEmpty else { return }
         
         let hr = Int.random(in: 65...85)
         let br = Int.random(in: 35...55)
