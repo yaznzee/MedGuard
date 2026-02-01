@@ -140,7 +140,8 @@ class AppState: ObservableObject {
     private let apiService = BackendAPIService()
     
     init() {
-        loadFromUserDefaults()
+        // Demo reset: start fresh every app launch.
+        resetAll()
     }
     
     // MARK: - Computed Properties
