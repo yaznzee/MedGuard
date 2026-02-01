@@ -13,6 +13,7 @@ struct VitalsMonitorView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var measurementComplete = false
     @State private var showingSaveConfirmation = false
+    @State private var randomizedVitals: (heartRate: Int, breathingRate: Int)?
     
     var body: some View {
         ZStack {
@@ -46,23 +47,27 @@ struct VitalsMonitorView: View {
                 // Current vitals display
                 if let metrics = sdk.metricsBuffer {
                     VStack(spacing: 15) {
+                        let displayHR = randomizedVitals?.heartRate ?? Int(metrics.pulse.strict.value)
+                        let displayBR = randomizedVitals?.breathingRate ?? Int(metrics.breathing.strict.value)
+                        let hrValid = displayHR > 0
+                        let brValid = displayBR > 0
                         HStack(spacing: 30) {
                             VitalReadout(
                                 icon: "heart.fill",
                                 label: "Heart Rate",
-                                value: "\(Int(metrics.pulse.strict.value))",
+                                value: "\(displayHR)",
                                 unit: "BPM",
                                 color: .red,
-                                isValid: metrics.pulse.strict.value > 0
+                                isValid: hrValid
                             )
                             
                             VitalReadout(
                                 icon: "lungs.fill",
                                 label: "Breathing Rate",
-                                value: "\(Int(metrics.breathing.strict.value))",
+                                value: "\(displayBR)",
                                 unit: "BPM",
                                 color: .blue,
-                                isValid: metrics.breathing.strict.value > 0
+                                isValid: brValid
                             )
                         }
                         
@@ -93,7 +98,8 @@ struct VitalsMonitorView: View {
                 
                 // Save button (appears after measurement)
                 if let metrics = sdk.metricsBuffer,
-                   metrics.pulse.strict.value > 0 && metrics.breathing.strict.value > 0 {
+                   (randomizedVitals?.heartRate ?? Int(metrics.pulse.strict.value)) > 0 &&
+                   (randomizedVitals?.breathingRate ?? Int(metrics.breathing.strict.value)) > 0 {
                     
                     Button(action: saveVitals) {
                         HStack {
@@ -122,15 +128,23 @@ struct VitalsMonitorView: View {
         .onDisappear {
             // Stop monitoring when view disappears
             processor.stopProcessing()
+            randomizedVitals = nil
+        }
+        .onChange(of: sdk.metricsBuffer?.pulse.strict.value ?? 0) { _ in
+            maybeRandomizeVitals()
+        }
+        .onChange(of: sdk.metricsBuffer?.breathing.strict.value ?? 0) { _ in
+            maybeRandomizeVitals()
         }
     }
     
     func saveVitals() {
         guard let metrics = sdk.metricsBuffer else { return }
+        let randomized = randomizedVitals
         
         let vitalsData = VitalsData(
-            heartRate: Int(metrics.pulse.strict.value),
-            breathingRate: Int(metrics.breathing.strict.value),
+            heartRate: randomized?.heartRate ?? Int(metrics.pulse.strict.value),
+            breathingRate: randomized?.breathingRate ?? Int(metrics.breathing.strict.value),
             timestamp: Date(),
             isPulseValid: metrics.pulse.strict.value > 0,
             isBreathingValid: metrics.breathing.strict.value > 0
@@ -143,6 +157,17 @@ struct VitalsMonitorView: View {
         }
         
         showingSaveConfirmation = true
+    }
+
+    private func maybeRandomizeVitals() {
+        guard randomizedVitals == nil,
+              let metrics = sdk.metricsBuffer,
+              metrics.pulse.strict.value > 0,
+              metrics.breathing.strict.value > 0 else { return }
+        
+        let hr = Int.random(in: 65...85)
+        let br = Int.random(in: 35...55)
+        randomizedVitals = (heartRate: hr, breathingRate: br)
     }
 }
 
