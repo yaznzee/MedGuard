@@ -1,0 +1,62 @@
+# Sample 23andMe Raw Data File for Testing
+# This is a SIMPLIFIED version containing only the CYP genes we need
+# Real 23andMe files contain ~600,000 SNPs, but we only need these few
+
+# rsid	chromosome	position	genotype
+rs1065852	22	42126611	CT
+rs4244285	10	96541616	AG
+rs1799853	10	96702047	CT
+rs776746	7	99270539	AG
+rs762551	15	75041917	AC
+
+# Gene Explanations:
+# rs1065852 (CYP2D6) - CT = Intermediate metabolizer
+#   - TT = Poor metabolizer (red flag for codeine, tramadol)
+#   - CT = Intermediate (yellow flag)
+#   - CC = Normal metabolizer (green)
+#
+# rs4244285 (CYP2C19) - AG = Intermediate metabolizer
+#   - AA = Poor metabolizer (red flag for clopidogrel)
+#   - AG = Intermediate (yellow flag)
+#   - GG = Normal metabolizer (green)
+#
+# rs1799853 (CYP2C9) - CT = One loss-of-function allele
+#   - TT = Two loss-of-function alleles (red flag for warfarin)
+#   - CT = One loss-of-function (yellow flag for warfarin)
+#   - CC = Normal (green)
+#
+# rs776746 (CYP3A5) - AG = One functional allele
+#   - AA = No functional CYP3A5 (most common)
+#   - AG = One functional allele (intermediate)
+#   - GG = Two functional alleles (high activity)
+#
+# rs762551 (CYP1A2) - AC = Intermediate activity
+#   - AA = Slow metabolizer (caffeine sensitivity)
+#   - AC = Intermediate
+#   - CC = Fast metabolizer (can handle more caffeine)
+
+# TEST SCENARIOS:
+
+# SCENARIO 1: Safe Profile (paste this as sample_safe.txt)
+# rs1065852	22	42126611	CC
+# rs4244285	10	96541616	GG
+# rs1799853	10	96702047	CC
+# rs776746	7	99270539	AA
+# rs762551	15	75041917	CC
+# Expected: Green light for most medications
+
+# SCENARIO 2: High Risk Profile (paste this as sample_high_risk.txt)
+# rs1065852	22	42126611	TT
+# rs4244285	10	96541616	AA
+# rs1799853	10	96702047	TT
+# rs776746	7	99270539	AA
+# rs762551	15	75041917	AA
+# Expected: Red light for codeine, clopidogrel, warfarin
+
+# SCENARIO 3: Mixed Profile (paste this as sample_mixed.txt)
+# rs1065852	22	42126611	CT
+# rs4244285	10	96541616	AG
+# rs1799853	10	96702047	CT
+# rs776746	7	99270539	AG
+# rs762551	15	75041917	AC
+# Expected: Yellow light with specific drug warnings
