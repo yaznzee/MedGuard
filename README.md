@@ -1,5 +1,5 @@
 # MedGuard - Personalized Drug Safety Analyzer
-### Hack@Brown 2026 Project
+## Hack@Brown 2026 Winner!
 
 ![MedGuard Logo](https://img.shields.io/badge/Hack%40Brown-2026-purple)
 ![iOS](https://img.shields.io/badge/iOS-15.0%2B-blue)
