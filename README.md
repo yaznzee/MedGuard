@@ -260,74 +260,6 @@ Result: Reduced pain relief, risk of side effects
 Action: Consult physician for alternative
 ```
 
-## 🔧 Customization for Cursor
-
-### Using Cursor to Build This App
-
-1. **Create New Xcode Project**
-   ```
-   Open Cursor → Open project folder
-   ```
-
-2. **Paste File Contents**
-   - Copy each .swift file content from the outputs
-   - Create new Swift files in Xcode
-   - Paste the code
-
-3. **Cursor Prompts for Enhancements**
-
-   ```
-   "Add a settings page where users can input their age, sex, and medical history"
-   
-   "Create animated transitions between workflow steps"
-   
-   "Add HealthKit integration to pull historical vitals data"
-   
-   "Implement local database using CoreData to store analysis history"
-   
-   "Add biometric authentication (Face ID) to protect sensitive health data"
-   
-   "Create widgets showing latest vitals on home screen"
-   ```
-
-4. **Vibe Coding Tips**
-   - Start with one view at a time
-   - Use @Preview for live UI updates
-   - Ask Cursor to "make it look more modern" for UI improvements
-   - Request "add error handling for [specific scenario]"
-
-## 🎓 Hackathon Pitch Tips
-
-### Emotional Appeal
-
-"**Imagine** your grandmother starting a new blood pressure medication. Her doctor says it's safe, but her genetic makeup makes her a poor metabolizer - the drug stays in her system twice as long. With MedGuard, you'd know **before** she takes the first pill."
-
-### Statistics to Use
-
-- **25%** of drug effectiveness variations due to genetics
-- **7-10%** of hospital admissions from adverse drug reactions
-- **$30 billion** annual cost of preventable drug reactions in US
-- **95,000** deaths annually from medication errors
-
-### Demo Flow (5 minutes)
-
-1. **Problem** (30 sec) - Personal story of drug reaction
-2. **Solution** (30 sec) - Show app home screen
-3. **Upload DNA** (30 sec) - Show genetic profile
-4. **Add Meds** (30 sec) - Add dangerous combination
-5. **Vitals** (1 min) - Live demo of Presage SDK
-6. **Analysis** (1 min) - Show AI-generated report with RED risk
-7. **Monitoring** (1 min) - Show follow-up vitals comparison
-8. **Impact** (30 sec) - "This could save lives"
-
-### Key Differentiators
-
-✅ **Real Genetics** - Not just theoretical, uses actual 23andMe data  
-✅ **Real-time Vitals** - Presage SDK medical-grade monitoring  
-✅ **AI-Powered** - Gemini generates personalized reports  
-✅ **Actionable** - Clear next steps (green/yellow/red)  
-✅ **Complete Solution** - Not just analysis, but ongoing monitoring
-
 ## 📦 Dependencies
 
 ```swift
@@ -364,7 +296,7 @@ MIT License - Build upon this for your own projects!
 
 ## 🏆 Hack@Brown 2026
 
-**Team:** [Your Team Name]  
+**Team:** ARC  
 **Track:** Health Tech / AI  
 **Built with:** Swift, SwiftUI, Presage SDK, Gemini API
 
@@ -372,4 +304,4 @@ MIT License - Build upon this for your own projects!
 
 **Made with ❤️ for safer medication use**
 
-For questions or demo requests, contact: [your email]
+For questions or demo requests, contact: yaa2076@nyu.edu
